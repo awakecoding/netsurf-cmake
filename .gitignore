@@ -1,0 +1,8 @@
+*~
+external/
+Makefile
+Makefile.defaults
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
