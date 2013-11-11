@@ -18,6 +18,8 @@ endif()
 set(PKG_CONFIG_PATH "${NETSURF_PREFIX}/lib/pkgconfig")
 set(EXTERNAL_PROJECTS_CONFIGURE_EXTRA "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
 
+set(ENV{PKG_CONFIG_PATH} "${PKG_CONFIG_PATH}")
+
 set(EXTERNAL_PROJECT "buildsystem")
 set(${EXTERNAL_PROJECT}_GIT_REPOSITORY "git://git.netsurf-browser.org/buildsystem")
 set(${EXTERNAL_PROJECT}_MAKE "PREFIX=${NETSURF_PREFIX};PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
@@ -80,7 +82,7 @@ set(${EXTERNAL_PROJECT}_EXT ".tar.gz")
 set(${EXTERNAL_PROJECT}_FILE "${${EXTERNAL_PROJECT}_NAME}${${EXTERNAL_PROJECT}_EXT}")
 set(${EXTERNAL_PROJECT}_URL "http://download.netsurf-browser.org/netsurf/releases/source/${${EXTERNAL_PROJECT}_FILE}")
 set(${EXTERNAL_PROJECT}_MAKE "TARGET=framebuffer;PREFIX=${NETSURF_PREFIX};PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-set(${EXTERNAL_PROJECT}_DEPENDS "buildsystem;libwapcaplet;libparserutils;libhubbub;libcss;libdom;libnsbmp;libnsgif;libnsfb")
+set(${EXTERNAL_PROJECT}_DEPENDS "")
 list(APPEND EXTERNAL_PROJECTS ${EXTERNAL_PROJECT})
 
 foreach(EXTERNAL_PROJECT ${EXTERNAL_PROJECTS})
@@ -104,6 +106,10 @@ ExternalProject_Add_Step("netsurf" NETSURF_MAKEFILE_DEFAULTS
 	COMMAND cp -fr ${CMAKE_CURRENT_SOURCE_DIR}/Makefile.defaults ${EXTERNAL_PROJECTS_BASE}/Source/netsurf/Makefile.defaults
 	DEPENDEES patch
 	DEPENDERS configure)
+
+add_custom_target(ns-build DEPENDS "buildsystem")
+add_custom_target(ns-libs DEPENDS "libwapcaplet" "libparserutils" "libhubbub" "libcss" "libdom" "libnsbmp" "libnsgif" "libnsfb")
+add_custom_target(ns-browser DEPENDS "netsurf")
 
 set(MAKE_ALL "make")
 
